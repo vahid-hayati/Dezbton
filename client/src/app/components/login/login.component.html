@@ -1,0 +1,19 @@
+<form [formGroup]="loginFg" (ngSubmit)="loginUser()">
+    <h2>ورود</h2>
+    <mat-form-field appearance="outline">
+        <mat-label>نام کاربری</mat-label>
+        <input type="text" formControlName="userNameCtrl" placeholder="نام کاربری خود را وارد کنید" matInput>
+        <mat-hint>حداکثر 10 کاراکتر</mat-hint>
+        <mat-error>پر کردن این فیلد الزامیست</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>رمز عبور</mat-label>
+        <input type="text" formControlName="passwordCtrl" placeholder="رمز عبور خود را وارد کنید" matInput>
+        <mat-hint>بیشتر از 8 کاراکتر وارد کنید</mat-hint>
+        <mat-error>پر کردن این فیلد الزامیست</mat-error>
+    </mat-form-field>
+
+    <button type="submit" [disabled]="loginFg" mat-raised-button color="accent">ورود</button>
+
+    <!-- <button routerLink="ثبت نام" mat-raised-button color="accent">ثبت نام</button> -->
+</form>

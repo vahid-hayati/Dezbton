@@ -1,0 +1,62 @@
+<form [formGroup]="registerFg">
+    <h2>ثبت نام</h2>
+    <mat-form-field appearance="outline">
+        <mat-label>نام</mat-label>
+        <input type="text" formControlName="firstNameCtrl" placeholder="نام خود را وارد کنید" matInput>
+        <mat-hint>لطفا از کیبورد فارسی استفاده کنید</mat-hint>
+        <mat-error>پر کردن این فیلد الزامیست</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>نام خانوادگی</mat-label>
+        <input type="text" formControlName="lastNameCtrl" placeholder="نام خانوادگی خود را وارد کنید" matInput>
+        <mat-hint>لطفا از کیبورد فارسی استفاده کنید</mat-hint>
+        <mat-error>پر کردن این فیلد الزامیست</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>نام کاربری</mat-label>
+        <input type="text" formControlName="userNameCtrl" placeholder="نام کاربری خود را وارد کنید" matInput>
+        <mat-hint>حداکثر 10 کاراکتر</mat-hint>
+        <mat-error>پر کردن این فیلد الزامیست</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>شماره تماس</mat-label>
+        <input type="text" formControlName="phoneNumberCtrl" placeholder="شماره تماس خود را وارد کنید" matInput>
+        <mat-hint>شماره همراه وارد کنید</mat-hint>
+        <mat-error>پر کردن این فیلد الزامیست</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>ایمیل</mat-label>
+        <input type="email" formControlName="emailCtrl" placeholder="ایمیل خود را وارد کنید" matInput>
+        <mat-hint>فرمت ایمیل را دقت کنید</mat-hint>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>رمز عبور</mat-label>
+        <input type="text" formControlName="passwordCtrl" placeholder="رمز عبور خود را وارد کنید" matInput>
+        <mat-hint>بیشتر از 8 کاراکتر وارد کنید</mat-hint>
+        <mat-error>پر کردن این فیلد الزامیست</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>تکرار رمز عبور</mat-label>
+        <input type="text" formControlName="confirmPasswordCtrl" placeholder="رمز عبور را تکرار کنید" matInput>
+        <mat-hint>رمز ورود را مجدد وارد کنید</mat-hint>
+        <mat-error>پر کردن این فیلد الزامیست</mat-error>
+    </mat-form-field>
+
+    <button (click)="registerUser()" mat-raised-button color="primary">ایجاد کاربر</button>
+
+    <button (click)="clearForm()" [disabled]="registerFg.pristine" mat-raised-button color="warn">فرم را پاک
+        کنید</button>
+</form>
+
+<div *ngIf="userRes">
+    <h2>{{userRes.id}}</h2>
+    <h2>{{userRes.firstName}}</h2>
+    <h2>{{userRes.lastName}}</h2>
+    <h2>{{userRes.userName}}</h2>
+    <h2>{{userRes.phoneNumber}}</h2>
+    <h2>{{userRes.email}}</h2>
+    <h2>{{userRes.password}}</h2>
+    <h2>{{userRes.confirmPassword}}</h2>
+</div>
+
+<!-- <h2>{{registerFg.value | json}}</h2> -->
