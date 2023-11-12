@@ -2,6 +2,13 @@ using api.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+// builder.Services.AddSwaggerGen();
+
 #region MongoDbSettings
 ///// get values from this file: appsettings.Development.json /////
 // get section
@@ -24,21 +31,15 @@ builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
 #region Cors: baraye ta'eede Angular HttpClient requests
 builder.Services.AddCors(options =>
     {
-        options.AddDefaultPolicy(policy => 
+        options.AddDefaultPolicy(policy =>
             policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
     });
 #endregion Cors
 
 #region  Dependency Injection
-// builder.Services.AddSingleton<IAccountRepository, AccountRepository>(); App LifeCycle
-builder.Services.AddScoped<IAccountRepository, AccountRepository>(); //Controller LifeCycle
+// builder.Services.AddSingleton<IUserRepository, UserRepository>(); App LifeCycle
+builder.Services.AddScoped<IUserRepository, UserRepository>(); //Controller LifeCycle
 #endregion Dependency Injection
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
