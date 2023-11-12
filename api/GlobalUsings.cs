@@ -9,3 +9,4 @@ global using api.DTOs;
 global using MongoDB.Driver.Linq;
 global using Microsoft.Extensions.Options;
 global using api.Interfaces;
+global using api.Controllers.Helpers;
