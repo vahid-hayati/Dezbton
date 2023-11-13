@@ -21,7 +21,3 @@ public record LoginDto(
     string UserName,
     string Password
 );
-
-public record CallDto(
-    string PhoneNumber
-);

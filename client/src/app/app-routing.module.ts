@@ -16,11 +16,11 @@ import { FeedBackComponent } from './components/feed-back/feed-back.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
+  {path: 'خانه', component: HomeComponent},
   {path: 'مشاوره رایگان', component: FreeConsultationComponent},
   {path: 'ثبت نام', component: RegisterComponent},
   {path: 'ورود', component: LoginComponent},
   {path: 'ادمین',component: AdminComponent},
-  {path: 'خانه', component: HomeComponent},
   {path: 'محصولات', component: ProductsComponent},
   {path: 'پروژه های اجرا شده', component: CompletedProjectsComponent},
   {path: 'معرفی شرکت', component: AboutUsComponent},

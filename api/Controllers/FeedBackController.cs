@@ -1,8 +1,6 @@
 namespace api.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
-public class FeedBackController : ControllerBase
+public class FeedBackController : BaseApiController
 {
     private readonly IMongoCollection<FeedBack> _collection;
 

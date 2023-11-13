@@ -7,6 +7,6 @@ public record Register(
      string UserName,
      string PhoneNumber,
      string? Email,
-     string Password,
-     string ConfirmPassword
+     byte[] PasswordSalt,
+     byte[] PasswordHash
 );

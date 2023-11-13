@@ -1,15 +1,13 @@
 namespace api.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
-public class UserController : ControllerBase
+public class UserController : BaseApiController
 {
-    private readonly IAccountRepository _accountRepository;
+    private readonly IUserRepository _userRepository;
 
     #region dependency injection in the constructor
-    public UserController(IAccountRepository accountRepository)
+    public UserController(IUserRepository userRepository)
     {
-        _accountRepository = accountRepository;
+        _userRepository = userRepository;
     }
     #endregion dependency injection in the constructor
 
@@ -25,7 +23,7 @@ public class UserController : ControllerBase
         if (userInput.Password != userInput.ConfirmPassword)
             return BadRequest("کلمه های عبور یکسان نیست");
 
-        UserDto? userDto = await _accountRepository.Create(userInput, cancellationToken);
+        UserDto? userDto = await _userRepository.CreateAsync(userInput, cancellationToken);
 
         if (userDto is null)
             return BadRequest("نام و شناسه کاربری گرفته شده");
@@ -42,12 +40,28 @@ public class UserController : ControllerBase
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login(LoginDto userInput, CancellationToken cancellationToken)
     {
-        UserDto? userDto = await _accountRepository.Login(userInput, cancellationToken);
+        UserDto? userDto = await _userRepository.LoginAsync(userInput, cancellationToken);
 
         if (userDto is null)
             return Unauthorized("نام کاربری یا رمز ورود اشتباه است");
 
         return userDto;
+    }
+
+    /// <summary>
+    /// Get List<UserDto> 
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns>IEnumerable<UserDto></returns>
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<UserDto>>> GetAll(CancellationToken cancellationToken)
+    {
+        List<UserDto> userDtos = await _userRepository.GetAllAsync(cancellationToken);
+
+        if (!userDtos.Any())
+            return NoContent();
+
+        return userDtos;
     }
 
     /// <summary>
@@ -57,9 +71,9 @@ public class UserController : ControllerBase
     /// <param name="cancellationToken"></param>
     /// <returns>Register Model</returns>
     [HttpGet("get-by-PhoneNumber/{PhoneNumber}")]
-    public async Task<ActionResult<Register>> GetByPhoneNumber(CallDto userIn, CancellationToken cancellationToken)
+    public async Task<ActionResult<Register>> GetByPhoneNumber(string phoneNumber, CancellationToken cancellationToken)
     {
-        Register? docs = await _accountRepository.GetByPhoneNumber(userIn, cancellationToken);
+       Register? docs = await _userRepository.GetByPhoneNumberAsync(phoneNumber, cancellationToken);
 
         if (docs is null)
             return NotFound("حساب کاربری یافت نشد");
@@ -76,7 +90,7 @@ public class UserController : ControllerBase
     [HttpPut("update/{userId}")]
     public async Task<ActionResult<UpdateResult>> UpdateByUserId(string userId, Register userIn)
     {
-        UpdateResult? docs = await _accountRepository.UpdateByUserId(userId, userIn);
+        UpdateResult? docs = await _userRepository.UpdateByUserIdAsync(userId, userIn);
 
         return docs;
     }
@@ -89,13 +103,10 @@ public class UserController : ControllerBase
     [HttpDelete("delete/{userId}")]
     public async Task<DeleteResult> Delete(string userId)
     {
-       return await _accountRepository.Delete(userId);
+        return await _userRepository.DeleteAsync(userId);
     }
 
 }
-
-
-
 
 // [HttpGet("get-by-phoneNumber/{phoneNumber}")]
 // public ActionResult<Register> GetByPhoneNumber(string phoneNumber)
