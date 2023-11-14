@@ -51,12 +51,16 @@ public class UserRepository : IUserRepository
 
         if (fromDoc.Id is not null)
         {
-            UserDto userDto = new UserDto(
-                Id: fromDoc.Id,
-                userName: fromDoc.UserName
+            return new UserDto(
+             Id: fromDoc.Id,
+             userName: fromDoc.UserName
             );
+            // UserDto userDto = new UserDto(
+            //     Id: fromDoc.Id,
+            //     userName: fromDoc.UserName
+            // );
 
-            return userDto;
+            // return userDto;
         }
 
         return null;

@@ -12,9 +12,14 @@ body {
     // height: 3rem;
 
     .h1 {
-        font-style: inherit;
-        font-size: 3rem;
+        display: flex;
+        // flex-direction: row;
+        align-items: center;
+        text-decoration: none;
+        // color: white;
+        // font-style: inherit;
+        // font-size: 3rem;
         font-weight: bold;
-        // align-content: center;
+        // // align-content: center;
     }
 }
