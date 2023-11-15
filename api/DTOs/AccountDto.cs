@@ -18,6 +18,9 @@ public record RegisterDto(
 );
 
 public record LoginDto(
+    [MinLength(3), MaxLength(10)]
     string UserName,
+    
+    [DataType(DataType.Password), MinLength(8), MaxLength(16)]
     string Password
 );

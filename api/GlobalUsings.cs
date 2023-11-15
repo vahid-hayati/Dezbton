@@ -10,3 +10,5 @@ global using MongoDB.Driver.Linq;
 global using Microsoft.Extensions.Options;
 global using api.Interfaces;
 global using api.Controllers.Helpers;
+global using System.Security.Cryptography;
+global using System.Text;
