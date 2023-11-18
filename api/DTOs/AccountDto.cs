@@ -10,7 +10,7 @@ public record RegisterDto(
     //PhoneNumber
     [MinLength(11), MaxLength(13)] string PhoneNumber,
     //Email
-    [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,5})+)$")] string? Email,
+    [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,5})+)$", ErrorMessage ="فرمت ایمیل درست نیست")] string? Email,
     //Password
     [DataType(DataType.Password), MinLength(8), MaxLength(16)] string Password,
     //ConfirmPassword

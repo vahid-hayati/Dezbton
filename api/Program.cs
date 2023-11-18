@@ -40,6 +40,7 @@ builder.Services.AddCors(options =>
 // builder.Services.AddSingleton<IUserRepository, UserRepository>(); App LifeCycle
 builder.Services.AddScoped<IAccountRepository, AccountRepository>(); //Controller LifeCycle
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 #endregion Dependency Injection
 
 var app = builder.Build();

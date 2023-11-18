@@ -1,62 +1,74 @@
 namespace api.Controllers;
 
-public class FeedBackController : BaseApiController
+public class FeedbackController : BaseApiController
 {
-    private readonly IMongoCollection<FeedBack> _collection;
+    private readonly IFeedbackRepository _feedbackRepository;
 
-    public FeedBackController(IMongoClient client, IMongoDbSettings dbSettings)
+    #region  dependency injection in the constructor
+    public FeedbackController(IFeedbackRepository feedbackRepository)
     {
-        var dbName = client.GetDatabase(dbSettings.DatabaseName);
-        _collection = dbName.GetCollection<FeedBack>("feedBacks");
+        _feedbackRepository = feedbackRepository;
+    }
+    #endregion dependency injection in the constructor
+
+    /// <summary>
+    /// Add Comments
+    /// </summary>
+    /// <param name="userComment"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>FeedbackDto</returns>
+    [HttpPost("add_comments")]
+    public async Task<ActionResult<FeedbackDto>> AddComment(Feedback userComment, CancellationToken cancellationToken)
+    {
+        FeedbackDto? feedbackDto = await _feedbackRepository.AddCommentAsync(userComment, cancellationToken);
+
+        if (feedbackDto is null)
+            return BadRequest("کامنت ثبت نشد");
+
+        return feedbackDto;
     }
 
-    [HttpPost("register_comments")]
-    public ActionResult<FeedBack> AddCooment(FeedBack userComments)
-    {
-        // bool formDocs = _collection.AsQueryable().Where<FeedBack>(doc =>
-        // doc.PhoneNumber == userComments.PhoneNumber.Trim()).Any();
-
-        // if (formDocs)
-        // return BadRequest("شما با این شماره تماس ");
-
-        FeedBack feedBack = new FeedBack(
-            Id: null,
-            PhoneNumber: userComments.PhoneNumber,
-            Email: userComments.Email?.ToLower().Trim(),
-            Comments: userComments.Comments
-        );
-
-        _collection.InsertOne(feedBack);
-
-        return feedBack;
-    }
-
-    [HttpGet("get_by_phoneNumber/{phoneNumber}")]
-    public ActionResult<IEnumerable<FeedBack>> GetByPhoneNumber(string phoneNumber)
-    {
-        List<FeedBack> comments = _collection.Find<FeedBack>(doc =>
-        doc.Email == phoneNumber).ToList();
-
-       if (comments is null)
-            return NotFound("نظری با این شماره تماس ثبت نشده");
-
-        return comments;
-    }
-
+    /// <summary>
+    /// Get all List<FeedbackDto> 
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns>IEnumerable<FeedbackDto></returns>
     [HttpGet]
-    public ActionResult<IEnumerable<FeedBack>> GettAll()
+    public async Task<ActionResult<IEnumerable<FeedbackDto>>> GetAll(CancellationToken cancellationToken)
     {
-        List<FeedBack> comments = _collection.Find<FeedBack>(new BsonDocument()).ToList();
+        List<FeedbackDto> feedbackDtos = await _feedbackRepository.GetAllAsync(cancellationToken);
 
-        if (!comments.Any())
+        if (!feedbackDtos.Any())
             return NoContent();
 
-        return comments;
+        return feedbackDtos;
     }
 
-    [HttpDelete("delete/{userId}")]
-    public ActionResult<DeleteResult> Delete(string userId)
+    /// <summary>
+    /// Get by phone number List<FeedbackDto> 
+    /// </summary>
+    /// <param name="phoneNumber"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>IEnumerable<FeedbackDto></returns>
+    [HttpGet("get_by_phoneNumber/{phoneNumber}")]
+    public async Task<ActionResult<IEnumerable<FeedbackDto>>> GetByPhoneNumber(string phoneNumber, CancellationToken cancellationToken)
     {
-        return _collection.DeleteOne<FeedBack>(doc => doc.Id == userId);
+        List<FeedbackDto> feedbackDtos = await _feedbackRepository.GetByPhoneNumberAsync(phoneNumber, cancellationToken);
+
+        if (!feedbackDtos.Any())
+            return NoContent();
+
+        return feedbackDtos;
+    }
+
+    /// <summary>
+    /// Delete
+    /// </summary>
+    /// <param name="feedbackId"></param>
+    /// <returns>void</returns>
+    [HttpDelete("delete/{feedbackId}")]
+    public async Task<DeleteResult> Delete(string feedbackId)
+    {
+        return await _feedbackRepository.DeleteAsync(feedbackId);
     }
 }
