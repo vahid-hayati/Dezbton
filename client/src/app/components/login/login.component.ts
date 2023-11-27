@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginUser } from 'src/app/models/login-user.models';
+import { AccountService } from 'src/app/services/account.service';
 
 @Component({
   selector: 'app-login',
@@ -10,10 +10,11 @@ import { LoginUser } from 'src/app/models/login-user.models';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  resLogin: LoginUser | undefined;
+  apiErrorMessage: string | undefined;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private ruoter: Router) { }
+  constructor(private accountService: AccountService, private fb: FormBuilder, private ruoter: Router) { }
 
+  //#region FormGroup
   loginFg = this.fb.group({
     userNameCtrl: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
     passwordCtrl: ['', [Validators.required, Validators.minLength(8)]]
@@ -26,17 +27,29 @@ export class LoginComponent {
   get PasswordCtrl(): FormControl {
     return this.loginFg.get('passwordCtrl') as FormControl;
   }
+  //#endregion FormGroup
 
-  loginUser(): void {
-    this.http.get<LoginUser>('http://localhost:5000/api/user/get-by-userName'
-      + this.UserNameCtrl.value + '/' + this.PasswordCtrl.value).subscribe(
-        {
-          next: res => {
-            this.resLogin = res
-            this.ruoter.navigateByUrl('');
-          }
+  //#region Methods
+  login(): void {
+    this.apiErrorMessage = undefined;
 
-        }
-      )
+    let user: LoginUser = {
+      userName: this.UserNameCtrl.value,
+      password: this.PasswordCtrl.value
+    }
+
+    //return: Observable<LoggedInUser>
+    this.accountService.loginUser(user).subscribe({
+      next: user => {
+        console.log(user);
+        this.ruoter.navigateByUrl('/');
+      },
+      error: err => this.apiErrorMessage = err.error
+    });
   }
+
+  getState(): void {
+    console.log(this.loginFg);
+  }
+  //#endregion Methods
 }

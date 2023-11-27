@@ -1,8 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { RegisterUser } from 'src/app/models/register-user-model';
-import { Register } from 'src/app/models/register.model';
+import { AccountService } from 'src/app/services/account.service';
 
 @Component({
   selector: 'app-register',
@@ -10,12 +9,15 @@ import { Register } from 'src/app/models/register.model';
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent {
-  userRes: RegisterUser | undefined;
-  
 
-  constructor(private fb: FormBuilder, private http: HttpClient) { }
+  passwordsNotMatch: boolean | undefined;
+  apiErrorMassage: string | undefined;
 
-  //#region Create Form Group/controler (AbstractControl)
+
+  constructor(private accountService: AccountService, private fb: FormBuilder) { }
+
+
+  //#region geter Form Group
   registerFg = this.fb.group({
     firstNameCtrl: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
     lastNameCtrl: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
@@ -25,9 +27,7 @@ export class RegisterComponent {
     passwordCtrl: ['', [Validators.required, Validators.minLength(8)]],
     confirmPasswordCtrl: ['', Validators.required, Validators.minLength(8)]
   });
-  //#endregion
 
-  //#region geter Form Group
   get FirstNameCtrl(): FormControl {
     return this.registerFg.get('firstNameCtrl') as FormControl;
   }
@@ -57,29 +57,35 @@ export class RegisterComponent {
   }
   //#endregion
 
-  registerUser(): void {
-    console.log(this.registerFg.value);
+  //#region Methods
+  register(): void {
+    this.apiErrorMassage = undefined;
 
-    let user: Register = {
-      firstName: this.FirstNameCtrl.value,
-      lastName: this.LastNameCtrl.value,
-      userName: this.UserNameCtrl.value,
-      phoneNumber: this.PhoneNumberCtrl.value,
-      email: this.EmailCtrl.value,
-      password: this.PasswordCtrl.value,
-      confirmPassword: this.ConfirmPasswordCtrl.value,
+    if (this.PasswordCtrl.value === this.ConfirmPasswordCtrl.value) {
+      this.passwordsNotMatch = false;
+
+      let user: RegisterUser = {
+        firstName: this.FirstNameCtrl.value,
+        lastName: this.LastNameCtrl.value,
+        userName: this.UserNameCtrl.value,
+        phoneNumber: this.PhoneNumberCtrl.value,
+        email: this.EmailCtrl.value,
+        password: this.PasswordCtrl.value,
+        confirmPassword: this.ConfirmPasswordCtrl.value,
+      }
+
+      // return: Observable<User>
+      this.accountService.registerUser(user).subscribe({
+        next: user => console.log(user),
+        error: err => this.apiErrorMassage = err.error
+      })
+
+    }
+    else {
+      this.passwordsNotMatch = true;
     }
 
-    this.http.post<RegisterUser>('http://localhost:5000/api/user/register', user).subscribe(
-      {
-        next: response => {
-          // this.userRes = response;
-          this.userRes = response;
-          console.log(this.userRes);
-
-        }
-      }
-    );
+    console.log(this.registerFg.value);
 
     this.registerFg.reset();
   }
@@ -87,4 +93,5 @@ export class RegisterComponent {
   clearForm(): void {
     this.registerFg.reset();
   }
+  //#endregion Methods
 }
