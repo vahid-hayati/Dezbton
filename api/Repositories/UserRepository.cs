@@ -2,6 +2,7 @@ namespace api.Repositories;
 
 public class UserRepository : IUserRepository
 {
+    #region Constructor Section
     private const string _collectionName = "users";
     private readonly IMongoCollection<Register>? _collection;
 
@@ -10,6 +11,7 @@ public class UserRepository : IUserRepository
         var dbName = client.GetDatabase(dbSettings.DatabaseName);
         _collection = dbName.GetCollection<Register>(_collectionName);
     }
+    #endregion Constructor Section
 
     public async Task<List<UserDto>> GetAllAsync(CancellationToken cancellationToken)
     {
@@ -23,7 +25,7 @@ public class UserRepository : IUserRepository
             {
                 UserDto userDto = new UserDto(
                     Id: userIn.Id!,
-                    userName: userIn.UserName
+                    UserName: userIn.UserName
                 );
 
                 userDtos.Add(userDto);
@@ -35,15 +37,18 @@ public class UserRepository : IUserRepository
         return userDtos; // anyway, it returns an empty list of userDtos
     }
 
-    public async Task<Register?> GetByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken)
+    public async Task<UserDto?> GetByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken)
     {
         Register docs = await _collection.Find<Register>(doc =>
         doc.PhoneNumber == phoneNumber).FirstOrDefaultAsync(cancellationToken);
 
-        if (docs is null)
-            return null;
+        if (docs is not null)
+            return new UserDto(
+                Id: docs.Id!,
+                UserName: docs.UserName
+            );
 
-        return docs;
+        return null;
     }
 
     public async Task<UpdateResult> UpdateByUserIdAsync(string userId, Register userIn)
@@ -65,22 +70,3 @@ public class UserRepository : IUserRepository
         return await _collection.DeleteOneAsync<Register>(doc => doc.Id == userId);
     }
 }
-
-// [HttpDelete("delete/{userId}")]
-// public ActionResult<DeleteResult> Delete(string userId)
-// {
-//     return _collection.DeleteOne<Register>(doc => doc.Id == userId);
-// }
-
-
-// public async Task<List<UserDto?>> GetAll(List<RegisterDto> userInput, CancellationToken cancellationToken)
-// {
-//     bool users = await _collection.Find<Register>(new BsonDocument()).ToListAsync(cancellationToken);
-
-//     if (!users.Any())
-//         return null;
-
-
-//     return users;
-
-// }

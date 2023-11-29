@@ -2,16 +2,21 @@ namespace api.Repositories;
 
 public class AccountRepository : IAccountRepository
 {
+    #region  Constructor Section
     private const string _collectionName = "users";
     private readonly IMongoCollection<Register>? _collection;
 
-    public AccountRepository(IMongoClient client, IMongoDbSettings dbSettings)
+    private readonly ITokenService _tokenService;
+
+    public AccountRepository(IMongoClient client, IMongoDbSettings dbSettings, ITokenService tokenService)
     {
         var dbName = client.GetDatabase(dbSettings.DatabaseName);
         _collection = dbName.GetCollection<Register>(_collectionName);
+        _tokenService = tokenService;
     }
+    #endregion Constructor Section
 
-    public async Task<UserDto?> CreateAsync(RegisterDto userInput, CancellationToken cancellationToken)
+    public async Task<LoggedInDto?> CreateAsync(RegisterDto userInput, CancellationToken cancellationToken)
     {
         bool formDocs = await _collection.Find<Register>(doc =>
            doc.PhoneNumber == userInput.PhoneNumber.Trim()).AnyAsync(cancellationToken);
@@ -37,16 +42,17 @@ public class AccountRepository : IAccountRepository
 
         if (fromDoc.Id is not null)
         {
-            return new UserDto(
+            return new LoggedInDto(
              Id: fromDoc.Id,
-             userName: fromDoc.UserName
+             UserName: fromDoc.UserName,
+             Token: _tokenService.CreateToken(fromDoc)
             );
         }
 
         return null;
     }
 
-    public async Task<UserDto?> LoginAsync(LoginDto userInput, CancellationToken cancellationToken)
+    public async Task<LoggedInDto?> LoginAsync(LoginDto userInput, CancellationToken cancellationToken)
     {
         Register login = await _collection.Find<Register>(doc =>
         doc.UserName == userInput.UserName.ToLower().Trim()).FirstOrDefaultAsync(cancellationToken);
@@ -62,9 +68,10 @@ public class AccountRepository : IAccountRepository
         {
             if (login.Id is not null)
             {
-                return new UserDto(
+                return new LoggedInDto(
                     Id: login.Id,
-                    userName: login.UserName
+                    UserName: login.UserName,
+                    Token: _tokenService.CreateToken(login)
                 );
             }
         }

@@ -1,5 +1,3 @@
-using api.Repositories;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -25,7 +23,6 @@ builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
 
     return new MongoClient(uri.ConnectionString);
 });
-
 #endregion MongoDbSettings
 
 #region Cors: baraye ta'eede Angular HttpClient requests
@@ -36,11 +33,31 @@ builder.Services.AddCors(options =>
     });
 #endregion Cors
 
+#region Authentication & Authorization
+string tokenValue = builder.Configuration["TokenKey"]!;
+
+if (!string.IsNullOrEmpty(tokenValue))
+{
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenValue)),
+                ValidateIssuer = false,
+                ValidateAudience = false
+            };
+        });
+}
+#endregion Authentication & Authorization
+
 #region  Dependency Injection
 // builder.Services.AddSingleton<IUserRepository, UserRepository>(); App LifeCycle
 builder.Services.AddScoped<IAccountRepository, AccountRepository>(); //Controller LifeCycle
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 #endregion Dependency Injection
 
 var app = builder.Build();
@@ -49,6 +66,8 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 
 app.UseCors();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

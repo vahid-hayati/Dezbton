@@ -2,14 +2,15 @@ namespace api.Controllers;
 
 public class AccountController : BaseApiController
 {
+    #region Constructor Section
     private readonly IAccountRepository _accountRepository;
 
-    #region dependency injection in the constructor
+    // constructor - dependency injection
     public AccountController(IAccountRepository accountRepository)
     {
         _accountRepository = accountRepository;
     }
-    #endregion dependency injection in the constructor
+    #endregion Constructor Section
 
     /// <summary>
     /// Create accounts
@@ -18,17 +19,17 @@ public class AccountController : BaseApiController
     /// <param name="cancellationToken"></param>
     /// <returns>UserDto</returns>
     [HttpPost("register")]
-    public async Task<ActionResult<UserDto>> Create(RegisterDto userInput, CancellationToken cancellationToken)
+    public async Task<ActionResult<LoggedInDto>> Create(RegisterDto userInput, CancellationToken cancellationToken)
     {
         if (userInput.Password != userInput.ConfirmPassword)
             return BadRequest("کلمه های عبور یکسان نیست");
 
-        UserDto? userDto = await _accountRepository.CreateAsync(userInput, cancellationToken);
+        LoggedInDto? loggedInDto = await _accountRepository.CreateAsync(userInput, cancellationToken);
 
-        if (userDto is null)
-            return BadRequest("نام و شناسه کاربری گرفته شده");
+        if (loggedInDto is null)
+            return BadRequest("شما با این مشخصات ثبت نام انجام داده اید!");
 
-        return userDto;
+        return loggedInDto;
     }
 
     /// <summary>
@@ -38,13 +39,13 @@ public class AccountController : BaseApiController
     /// <param name="cancellationToken"></param>
     /// <returns>UserDto</returns>
     [HttpPost("login")]
-    public async Task<ActionResult<UserDto>> Login(LoginDto userInput, CancellationToken cancellationToken)
+    public async Task<ActionResult<LoggedInDto>> Login(LoginDto userInput, CancellationToken cancellationToken)
     {
-        UserDto? userDto = await _accountRepository.LoginAsync(userInput, cancellationToken);
+        LoggedInDto? loggedInDto = await _accountRepository.LoginAsync(userInput, cancellationToken);
 
-        if (userDto is null)
+        if (loggedInDto is null)
             return Unauthorized("نام کاربری یا رمز ورود اشتباه است");
 
-        return userDto;
+        return loggedInDto;
     }
 }

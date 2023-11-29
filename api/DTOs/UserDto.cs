@@ -2,5 +2,5 @@ namespace api.DTOs;
 
 public record UserDto(
     string Id,
-    string userName
+    string UserName
 );

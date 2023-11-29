@@ -2,14 +2,15 @@ namespace api.Controllers;
 
 public class UserController : BaseApiController
 {
+    #region Constructor Section
     private readonly IUserRepository _userRepository;
 
-    #region  dependency injection in the constructor
+    //dependency injection in the constructor
     public UserController(IUserRepository userRepository)
     {
         _userRepository = userRepository;
     }
-    #endregion dependency injection in the constructor
+    #endregion Constructor Section
 
     /// <summary>
     /// Get List<UserDto> 
@@ -34,9 +35,9 @@ public class UserController : BaseApiController
     /// <param name="cancellationToken"></param>
     /// <returns>Register Model</returns>
     [HttpGet("get-by-phoneNumber/{Phonenumber}")]
-    public async Task<ActionResult<Register>> GetByPhoneNumber(string phoneNumber, CancellationToken cancellationToken)
+    public async Task<ActionResult<UserDto?>> GetByPhoneNumber(string phoneNumber, CancellationToken cancellationToken)
     {
-        Register? docs = await _userRepository.GetByPhoneNumberAsync(phoneNumber, cancellationToken);
+        UserDto? docs = await _userRepository.GetByPhoneNumberAsync(phoneNumber, cancellationToken);
 
         if (docs is null)
             return NotFound("حساب کاربری یافت نشد");

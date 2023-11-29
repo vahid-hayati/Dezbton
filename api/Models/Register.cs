@@ -1,6 +1,6 @@
 namespace api.Models;
 
-public record Register(
+public record Register (
     [property: BsonId, BsonRepresentation(BsonType.ObjectId)] string? Id,
      string FirstName,
      string LastName,
