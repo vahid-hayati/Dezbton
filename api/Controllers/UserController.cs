@@ -1,5 +1,6 @@
 namespace api.Controllers;
 
+[Authorize]
 public class UserController : BaseApiController
 {
     #region Constructor Section
@@ -17,6 +18,7 @@ public class UserController : BaseApiController
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns>IEnumerable<UserDto></returns>
+    [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<UserDto>>> GetAll(CancellationToken cancellationToken)
     {
