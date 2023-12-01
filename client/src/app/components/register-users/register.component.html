@@ -1,54 +1,79 @@
-<form [formGroup]="registerFg">
+<form [formGroup]="registerFg" (ngSubmit)="registerFg.valid && register()">
     <h2>ثبت نام</h2>
+
     <mat-form-field appearance="outline">
         <mat-label>نام</mat-label>
         <input type="text" formControlName="firstNameCtrl" placeholder="نام خود را وارد کنید" matInput>
         <mat-hint>لطفا از کیبورد فارسی استفاده کنید</mat-hint>
-        <mat-error>پر کردن این فیلد الزامیست</mat-error>
+        <mat-error *ngIf="FirstNameCtrl.hasError('required')">پر کردن این فیلد الزامیست</mat-error>
+        <mat-error *ngIf="FirstNameCtrl.hasError('minlength')">کمتر از 3 کاراکتر نمیتوان وارد کرد</mat-error>
+        <mat-error *ngIf="FirstNameCtrl.hasError('maxlength')">بیشتر از 30 کاراکتر نمیتوان وارد کرد</mat-error>
     </mat-form-field>
+
     <mat-form-field appearance="outline">
         <mat-label>نام خانوادگی</mat-label>
         <input type="text" formControlName="lastNameCtrl" placeholder="نام خانوادگی خود را وارد کنید" matInput>
         <mat-hint>لطفا از کیبورد فارسی استفاده کنید</mat-hint>
-        <mat-error>پر کردن این فیلد الزامیست</mat-error>
+        <mat-error *ngIf="LastNameCtrl.hasError('required')">پر کردن این فیلد الزامیست</mat-error>
+        <mat-error *ngIf="LastNameCtrl.hasError('minlength')">کمتر از 3 کاراکتر نمیتوان وارد کرد</mat-error>
+        <mat-error *ngIf="LastNameCtrl.hasError('maxlength')">بیشتر از 30 کاراکتر نمیتوان وارد کرد</mat-error>
     </mat-form-field>
+
     <mat-form-field appearance="outline">
         <mat-label>نام کاربری</mat-label>
         <input type="text" formControlName="userNameCtrl" placeholder="نام کاربری خود را وارد کنید" matInput>
-        <mat-hint>حداکثر 10 کاراکتر</mat-hint>
-        <mat-error>پر کردن این فیلد الزامیست</mat-error>
+        <mat-hint>نام کاربری خود را وارد کنید</mat-hint>
+        <mat-error *ngIf="UserNameCtrl.hasError('required')">پر کردن این فیلد الزامیست</mat-error>
+        <mat-error *ngIf="UserNameCtrl.hasError('minlength')">کمتر از 3 کاراکتر نمیتوان وارد کرد</mat-error>
+        <mat-error *ngIf="UserNameCtrl.hasError('maxlength')">بیشتر از 10 کاراکتر نمیتوان وارد کرد</mat-error>
     </mat-form-field>
+
     <mat-form-field appearance="outline">
         <mat-label>شماره تماس</mat-label>
         <input type="text" formControlName="phoneNumberCtrl" placeholder="شماره تماس خود را وارد کنید" matInput>
         <mat-hint>شماره همراه وارد کنید</mat-hint>
-        <mat-error>پر کردن این فیلد الزامیست</mat-error>
+        <mat-error *ngIf="PhoneNumberCtrl.hasError('required')">پر کردن این فیلد الزامیست</mat-error>
+        <mat-error *ngIf="PhoneNumberCtrl.hasError('minlength')">کمتر از 11 عدد نمیتوان وارد کرد</mat-error>
+        <mat-error *ngIf="PhoneNumberCtrl.hasError('maxlength')">بیشتر از 13 عدد نمیتوان وارد کرد</mat-error>
     </mat-form-field>
+
     <mat-form-field appearance="outline">
         <mat-label>ایمیل</mat-label>
         <input type="email" formControlName="emailCtrl" placeholder="ایمیل خود را وارد کنید" matInput>
-        <mat-hint>فرمت ایمیل را دقت کنید</mat-hint>
+        <mat-hint>پر کردن این فیلد اختیاری است</mat-hint>
+        <mat-error *ngIf="EmailCtrl.hasError('pattern')">فرمت ایمیل را دقت کنید</mat-error>
     </mat-form-field>
+
     <mat-form-field appearance="outline">
         <mat-label>رمز عبور</mat-label>
         <input type="text" formControlName="passwordCtrl" placeholder="رمز عبور خود را وارد کنید" matInput>
-        <mat-hint>بیشتر از 8 کاراکتر وارد کنید</mat-hint>
-        <mat-error>پر کردن این فیلد الزامیست</mat-error>
+        <mat-hint>لطفا یک رمز عبور وارد کنید</mat-hint>
+        <mat-error *ngIf="PasswordCtrl.hasError('required')">پر کردن این فیلد الزامیست</mat-error>
+        <mat-error *ngIf="PasswordCtrl.hasError('minlength')">حداقل 8 کاراکتر</mat-error>
+        <mat-error *ngIf="PasswordCtrl.hasError('maxlength')">حداکثر 16 کاراکتر</mat-error>
     </mat-form-field>
+
     <mat-form-field appearance="outline">
         <mat-label>تکرار رمز عبور</mat-label>
         <input type="text" formControlName="confirmPasswordCtrl" placeholder="رمز عبور را تکرار کنید" matInput>
-        <mat-hint>رمز ورود را مجدد وارد کنید</mat-hint>
-        <mat-error>پر کردن این فیلد الزامیست</mat-error>
+        <mat-hint>رمز عبور را مجدد وارد کنید</mat-hint>
+        <mat-error *ngIf="ConfirmPasswordCtrl.hasError('required')">پر کردن این فیلد الزامیست</mat-error>
+        <mat-error *ngIf="ConfirmPasswordCtrl.hasError('minlength')">حداقل 8 کاراکتر</mat-error>
+        <mat-error *ngIf="ConfirmPasswordCtrl.hasError('maxlength')">حداکثر 16 کاراکتر</mat-error>
     </mat-form-field>
 
-    <button (click)="registerUser()" mat-raised-button color="primary">ایجاد کاربر</button>
+    <button type="submit" [disabled]="registerFg.invalid" mat-raised-button color="primary">ایجاد کاربر</button>
 
     <button (click)="clearForm()" [disabled]="registerFg.pristine" mat-raised-button color="warn">فرم را پاک
         کنید</button>
+
+    <p *ngIf="passwordsNotMatch">رمز های عبور برابر نیست</p>
+    <p *ngIf="apiErrorMassage">{{apiErrorMassage}}</p>
 </form>
 
-<div *ngIf="userRes">
+<button (click)="getState()"></button>
+
+<!-- <div *ngIf="userRes">
     <h2>{{userRes.id}}</h2>
     <h2>{{userRes.firstName}}</h2>
     <h2>{{userRes.lastName}}</h2>
@@ -57,6 +82,6 @@
     <h2>{{userRes.email}}</h2>
     <h2>{{userRes.password}}</h2>
     <h2>{{userRes.confirmPassword}}</h2>
-</div>
+</div> -->
 
 <!-- <h2>{{registerFg.value | json}}</h2> -->

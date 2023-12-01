@@ -1,5 +1,6 @@
 namespace api.Controllers;
 
+[Authorize]
 public class FeedbackController : BaseApiController
 {
     private readonly IFeedbackRepository _feedbackRepository;
@@ -33,6 +34,7 @@ public class FeedbackController : BaseApiController
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns>IEnumerable<FeedbackDto></returns>
+    [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<FeedbackDto>>> GetAll(CancellationToken cancellationToken)
     {

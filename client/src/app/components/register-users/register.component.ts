@@ -55,7 +55,7 @@ export class RegisterComponent {
   get ConfirmPasswordCtrl(): FormControl {
     return this.registerFg.get('confirmPasswordCtrl') as FormControl;
   }
-  //#endregion
+  //#endregion geter Form Group
 
   //#region Methods
   register(): void {
@@ -92,6 +92,10 @@ export class RegisterComponent {
 
   clearForm(): void {
     this.registerFg.reset();
+  }
+
+  getState(): void {
+    console.log(this.registerFg);
   }
   //#endregion Methods
 }
