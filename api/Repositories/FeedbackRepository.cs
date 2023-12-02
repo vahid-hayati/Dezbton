@@ -2,6 +2,7 @@ namespace api.Repositories;
 
 public class FeedbackRepository : IFeedbackRepository
 {
+    #region Constructor Section
     private const string _collectionName = "feedback";
 
     private readonly IMongoCollection<Feedback>? _collection;
@@ -11,6 +12,7 @@ public class FeedbackRepository : IFeedbackRepository
         var dbName = client.GetDatabase(dbSettings.DatabaseName);
         _collection = dbName.GetCollection<Feedback>(_collectionName);
     }
+    #endregion Constructor Section
 
     public async Task<FeedbackDto?> AddCommentAsync(Feedback userComment, CancellationToken cancellationToken)
     {

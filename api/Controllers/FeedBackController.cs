@@ -3,14 +3,14 @@ namespace api.Controllers;
 [Authorize]
 public class FeedbackController : BaseApiController
 {
+    #region Constructor Section
     private readonly IFeedbackRepository _feedbackRepository;
 
-    #region  dependency injection in the constructor
     public FeedbackController(IFeedbackRepository feedbackRepository)
     {
         _feedbackRepository = feedbackRepository;
     }
-    #endregion dependency injection in the constructor
+    #endregion Constructor Section
 
     /// <summary>
     /// Add Comments
