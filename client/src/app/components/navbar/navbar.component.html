@@ -1,16 +1,81 @@
-<body>
-    <div class="letf-div">
-        <button routerLink="ثبت نام" mat-raised-button color="primary">ثبت نام</button>
-        <button routerLink="ورود" mat-raised-button color="primary">ورود</button>
-        <button routerLink="مشاوره رایگان" mat-raised-button color="warn">مشاوره رایگان</button>
-    </div>
+<mat-toolbar color="primary">
+    <section class="left">
+        <a routerLink="/" class="brand">
+            <mat-icon>calendar_view_month</mat-icon>
+            DezBeton
+        </a>
+    </section>
 
-    <!-- <a routerLink="/" class="h1">DezBeton</a> -->
-    <h1 routerLink="/" class="h1">DezBeton</h1>
+    <section class="right">
+        <button *ngIf="user; else loginRegisterSection" [mat-menu-trigger-for]="appMenu" class="menu-button"
+            mat-mini-fab>
+        <span>{{user.userName[0] | titlecase}}</span>
+        </button>
+        <ng-template #loginRegisterSection>
+            <button routerLink="ثبت نام" mat-raised-button color="warn"> <mat-icon>person_add</mat-icon> ثبت نام</button>
+            <button routerLink="ورود" mat-raised-button color="warn"> <mat-icon>login</mat-icon> ورود</button>
+        </ng-template>
 
-    <div class="right-div">
-        <button routerLink="پروژه های اجرا شده" mat-raised-button color="primary">پروژه های اجرا شده</button>
-        <button routerLink="محصولات" mat-raised-button color="primary">محصولات</button>
-        <button routerLink="خانه" mat-raised-button color="primary"><mat-icon>home</mat-icon>خانه</button>
-    </div>
-</body>
+        <mat-menu #appMenu [class]="'mat-menu'">
+            <!-- profile -->
+            <div *ngIf="user" class="user-info">
+                <div class="profile-image">
+                    <p>
+                        {{user.userName[0] | titlecase}}
+                    </p>
+                </div>
+                <div>
+                    <p>{{user.id}}</p> <!-- We will place KnownAs here -->
+                    <p class="userName">{{user.userName}}</p>
+                </div>
+            </div>
+            <!-- navigation -->
+            <mat-divider></mat-divider>
+            <mat-list>
+                <mat-list-item>
+                    <div routerLink="/" mat-button class="menu-items">
+                        <mat-icon>edit_note</mat-icon>
+                        ویرایش پروفایل
+                    </div>
+                </mat-list-item>
+                <mat-list-item [routerLink]="['/member/get-all']" routerLinkActive="router-link-active">
+                    <div class="menu-items">
+                        <mat-icon>people_alt</mat-icon>
+                       همه اعضا
+                    </div>
+                </mat-list-item>
+                <mat-list-item [routerLink]="['/message/inbox']" routerLinkActive="router-link-active">
+                    <div class="menu-items">
+                        <mat-icon>message</mat-icon>
+                        پیام ها
+                    </div>
+                </mat-list-item>
+            </mat-list>
+
+            <mat-divider></mat-divider>
+            <div class="logout">
+                <button mat-raised-button (click)="logout()">خروج</button>
+            </div>
+        </mat-menu>
+    </section>
+</mat-toolbar>
+
+<!-- region OLD Code
+     <p *ngIf="user">{{user.userName}}</p>
+     <body>
+        <div class="letf-div">
+            <button routerLink="ثبت نام" mat-raised-button color="primary">ثبت نام</button>
+            <button routerLink="ورود" mat-raised-button color="primary">ورود</button>
+            <button routerLink="مشاوره رایگان" mat-raised-button color="warn">مشاوره رایگان</button>
+        </div>
+    
+        <h1 routerLink="/" class="h1">DezBeton</h1>
+    
+        <div class="right-div">
+            <button routerLink="پروژه های اجرا شده" mat-raised-button color="primary">پروژه های اجرا شده</button>
+            <button routerLink="محصولات" mat-raised-button color="primary">محصولات</button>
+            <button routerLink="خانه" mat-raised-button color="primary"><mat-icon>home</mat-icon>خانه</button>
+        </div>
+    </body> 
+endregion
+-->

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { Route, Router } from '@angular/router';
 import { RegisterUser } from 'src/app/models/register-user-model';
 import { AccountService } from 'src/app/services/account.service';
 
@@ -14,7 +15,7 @@ export class RegisterComponent {
   apiErrorMassage: string | undefined;
 
 
-  constructor(private accountService: AccountService, private fb: FormBuilder) { }
+  constructor(private accountService: AccountService, private fb: FormBuilder, private router: Router) { }
 
 
   //#region geter Form Group
@@ -24,8 +25,8 @@ export class RegisterComponent {
     userNameCtrl: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
     phoneNumberCtrl: ['', [Validators.required, Validators.minLength(11), Validators.maxLength(13)]],
     emailCtrl: ['', [Validators.pattern(/^([\w\.\-]+)@([\w\-]+)((\.(\w){2,5})+)$/)]],
-    passwordCtrl: ['', [Validators.required, Validators.minLength(8)]],
-    confirmPasswordCtrl: ['', Validators.required, Validators.minLength(8)]
+    passwordCtrl: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(16)]],
+    confirmPasswordCtrl: ['', Validators.required, Validators.minLength(8),  Validators.maxLength(16)]
   });
 
   get FirstNameCtrl(): FormControl {
@@ -76,7 +77,10 @@ export class RegisterComponent {
 
       // return: Observable<User>
       this.accountService.registerUser(user).subscribe({
-        next: user => console.log(user),
+        next: user => {
+          console.log(user);
+          this.router.navigateByUrl('/');
+        }, 
         error: err => this.apiErrorMassage = err.error
       })
 

@@ -1,10 +1,10 @@
 <form [formGroup]="loginFg" (ngSubmit)="loginFg.valid && login()">
     <div class="content">
-        <h2>ورود</h2>
+        <h1>ورود</h1>
 
         <mat-form-field appearance="outline">
             <mat-label>نام کاربری</mat-label>
-            <input type="text" formControlName="userNameCtrl" placeholder="نام کاربری خود را وارد کنید" matInput>
+            <input type="text" formControlName="userNameCtrl" label="UserName" placeholder="نام کاربری خود را وارد کنید" matInput>
             <mat-hint>نام کاربری خود را وارد کنید</mat-hint>
             <mat-error *ngIf="UserNameCtrl.hasError('required')">پر کردن این فیلد الزامیست</mat-error>
             <mat-error *ngIf="UserNameCtrl.hasError('minlength')">کمتر از 3 کاراکتر نمیتوان وارد کرد</mat-error>
@@ -13,14 +13,14 @@
 
         <mat-form-field appearance="outline">
             <mat-label>رمز عبور</mat-label>
-            <input type="text" formControlName="passwordCtrl" placeholder="رمز عبور خود را وارد کنید" matInput>
+            <input type="password" formControlName="passwordCtrl" label="Password" placeholder="رمز عبور خود را وارد کنید" matInput>
             <mat-hint>رمز عبور خود را وارد کنید</mat-hint>
             <mat-error *ngIf="PasswordCtrl.hasError('required')">پر کردن این فیلد الزامیست</mat-error>
             <mat-error *ngIf="PasswordCtrl.hasError('minlength')">حداقل 8 کاراکتر</mat-error>
             <mat-error *ngIf="PasswordCtrl.hasError('maxlength')">حداکثر 16 کاراکتر</mat-error>
         </mat-form-field>
 
-        <button type="submit" [disabled]="loginFg.invalid" mat-raised-button color="accent">ورود</button>
+        <button type="submit" mat-raised-button color="accent">ورود</button>
 
         <p *ngIf="apiErrorMessage">{{apiErrorMessage}}</p>
     </div>
@@ -28,4 +28,3 @@
 
 <button (click)="getState()">State</button>
 <p>{{loginFg.value| json}}</p>
-<!-- <button routerLink="ثبت نام" mat-raised-button color="accent">ثبت نام</button> -->

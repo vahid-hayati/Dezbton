@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RegisterUser } from '../models/register-user-model';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { User } from '../models/user.model';
-import { Route, Router } from '@angular/router';
+import { RegisterUser } from '../models/register-user-model';
 import { LoginUser } from '../models/login-user.models';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +42,7 @@ export class AccountService {
 
         return null;
       })
-    );
+    );  
   }
 
   setCurrentUser(user: User): void {

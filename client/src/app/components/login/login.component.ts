@@ -17,7 +17,7 @@ export class LoginComponent {
   //#region FormGroup
   loginFg = this.fb.group({
     userNameCtrl: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
-    passwordCtrl: ['', [Validators.required, Validators.minLength(8)]]
+    passwordCtrl: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(16)]]
   });
 
   get UserNameCtrl(): FormControl {
